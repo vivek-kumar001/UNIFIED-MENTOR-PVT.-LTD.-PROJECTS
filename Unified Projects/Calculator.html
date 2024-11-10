@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Calculator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .calculator {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .calculator-screen {
+      height: 70px;
+      font-size: 30px;
+      text-align: right;
+      padding: 10px;
+      margin-bottom: 5px;
+    }
+    .calculator-expression {
+      font-size: 1rem;
+      color: #6c757d;
+      text-align: right;
+      margin-bottom: 10px;
+      min-height: 20px;
+    }
+    .btn {
+      font-size: 1.5rem;
+    }
+    .btn-warning {
+      background-color: #ffc107;
+      transition: background-color 0.3s ease;
+    }
+    .btn-warning:hover {
+      background-color: #e0a800;
+    }
+  </style>
+</head>
+<body>
+<h1 class="container text-center text-uppercase text-decoration-underline " style="font-family:times-new-roman" >Basic Calculator Project</h1>
+<div class="container  " style="background-color:beige; border: 2px solid black;" >
+  <div class="calculator bg-dark">
+    <div class="calculator-expression" id="calculatorExpression"></div>
+    <input type="text" class="form-control calculator-screen" id="calculatorScreen" disabled>
+
+    <div class="row g-2 mt-2">
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendNumber('7')">7</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendNumber('8')">8</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendNumber('9')">9</button></div>
+      <div class="col-3"><button class="btn btn-warning w-100" onclick="chooseOperator('/')">/</button></div>
+
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendNumber('4')">4</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendNumber('5')">5</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendNumber('6')">6</button></div>
+      <div class="col-3"><button class="btn btn-warning w-100" onclick="chooseOperator('*')">*</button></div>
+
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendNumber('1')">1</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendNumber('2')">2</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendNumber('3')">3</button></div>
+      <div class="col-3"><button class="btn btn-warning w-100" onclick="chooseOperator('-')">-</button></div>
+
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendNumber('0')">0</button></div>
+      <div class="col-3"><button class="btn btn-secondary w-100" onclick="appendNumber('.')">.</button></div>
+      <div class="col-3"><button class="btn btn-danger w-100" onclick="clearScreen()">C</button></div>
+      <div class="col-3"><button class="btn btn-warning w-100" onclick="chooseOperator('+')">+</button></div>
+    </div>
+
+    <div class="row mt-2">
+      <div class="col-12">
+        <button class="btn btn-success w-100" onclick="calculate()">=</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentInput = '';
+  let operator = '';
+  let previousInput = '';
+  let expression = '';
+
+  function appendNumber(number) {
+    currentInput += number;
+    expression += number;
+    updateScreen();
+  }
+
+  function updateScreen() {
+    document.getElementById('calculatorScreen').value = currentInput;
+    document.getElementById('calculatorExpression').textContent = expression;
+  }
+
+  function clearScreen() {
+    currentInput = '';
+    operator = '';
+    previousInput = '';
+    expression = '';
+    updateScreen();
+  }
+
+  function chooseOperator(op) {
+    if (currentInput === '') return;
+    if (previousInput !== '') {
+      calculate();
+    }
+    operator = op;
+    previousInput = currentInput;
+    expression += ` ${op} `;
+    currentInput = '';
+    updateScreen();
+  }
+
+  function calculate() {
+    let result;
+    const prev = parseFloat(previousInput);
+    const current = parseFloat(currentInput);
+
+    if (isNaN(prev) || isNaN(current)) return;
+
+    switch (operator) {
+      case '+':
+        result = prev + current;
+        break;
+      case '-':
+        result = prev - current;
+        break;
+      case '*':
+        result = prev * current;
+        break;
+      case '/':
+        result = prev / current;
+        break;
+      default:
+        return;
+    }
+    
+    currentInput = result.toString();
+    operator = '';
+    previousInput = '';
+    expression = currentInput;  // Reset the expression to the result
+    updateScreen();
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
